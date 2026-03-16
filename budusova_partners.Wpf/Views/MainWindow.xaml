@@ -1,0 +1,151 @@
+﻿<Window x:Class="budusova_partners.Wpf.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ООО Мастер Пол" Height="550" Width="1000">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="AliceBlue">
+            <MenuItem Header="Партнеры" FontWeight="Bold">
+                <MenuItem Header="Добавить партнера"
+                          Click="AddPartner_Click"/>
+                <MenuItem Header="Редактировать партнера"
+                          Click="EditPartner_Click"/>
+                <Separator/>
+                <MenuItem Header="Удалить партнера"
+                          Click="DeletePartner_Click"/>
+            </MenuItem>
+            <MenuItem Header="Создать отчет"
+                      Click="CreateReport_Click"
+                      FontWeight="Bold"/>
+            <MenuItem Header="Выход"
+                      Click="Exit_Click"
+                      FontWeight="Bold"/>
+        </Menu>
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Grid.Row="0"
+                       Text="Список партнеров"
+                       Margin="10,5"/>
+
+            <TextBlock Grid.Column="2"
+                       Grid.Row="0"
+                       Text="История заказов партнера"
+                       Margin="10,5"/>
+
+            <ScrollViewer Grid.Column="0" Grid.Row="1">
+                <ListBox x:Name="PartnersList"
+                         SelectionChanged="PartnersList_SelectionChanged"
+                         Background="AliceBlue">
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Редактировать"
+                                      Click="EditPartner_Click"/>
+                            <MenuItem Header="Удалить"
+                                      Click="DeletePartner_Click"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Gray"
+                                    BorderThickness="1"
+                                    Margin="5"
+                                    Padding="10"
+                                    Width="350">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel>
+
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding PartnerType.Name}"
+                                                       FontSize="12"
+                                                       FontWeight="Bold"/>
+                                            <TextBlock Text=" | "
+                                                       FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="12"
+                                                       FontWeight="Bold"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding DirectorFullName}"/>
+                                        <TextBlock Text="{Binding Phone}"/>
+
+                                        <TextBlock>
+                                            <Run Text="Рейтинг: "/>
+                                            <Run Text="{Binding Rating}"/>
+                                        </TextBlock>
+
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               FontSize="16"
+                                               Text="{Binding DiscountText}"/>
+                                </Grid>
+
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+            <GridSplitter Grid.Column="1"
+                          Grid.Row="1"
+                          Width="5"
+                          Background="LightGray"
+                          HorizontalAlignment="Stretch"/>
+
+            <DataGrid Grid.Column="2"
+                      Grid.Row="1"
+                      x:Name="SalesGrid"
+                      AutoGenerateColumns="False"
+                      Margin="10"
+                      Background="AliceBlue"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      SelectionMode="Single">
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Продукт"
+                                        Binding="{Binding Product.Name}"
+                                        Width="*"/>
+
+                    <DataGridTextColumn Header="Количество"
+                                        Binding="{Binding Quantity}"
+                                        Width="100"/>
+
+                    <DataGridTextColumn Header="Цена"
+                                        Binding="{Binding UnitPrice}"
+                                        Width="120"/>
+
+                    <DataGridTextColumn Header="Дата"
+                                        Binding="{Binding SaleDate}"
+                                        Width="150"/>
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>
