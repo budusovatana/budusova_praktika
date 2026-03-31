@@ -47,8 +47,8 @@ namespace budusova_partners.Wpf.Views
 
                 foreach (var partner in partners)
                 {
-                    decimal totalSales = partner.PartnerSales.Sum(ps => ps.Quantity * ps.UnitPrice);
-                    int discount = DiscountService.CalculateDiscount(totalSales);
+                    int totalQuantity = partner.PartnerSales.Sum(ps => ps.Quantity);
+                    int discount = DiscountService.CalculateDiscount(totalQuantity);
                     partner.DiscountText = DiscountService.GetDiscountDescription(discount);
                 }
 
@@ -194,6 +194,42 @@ namespace budusova_partners.Wpf.Views
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void AddSale_Click(object sender, RoutedEventArgs e)
+        {
+            if (PartnersList.SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите партнера, для которого нужно добавить продажу.",
+                    "Партнер не выбран",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedPartner = (Partner)PartnersList.SelectedItem;
+
+            var addSaleWindow = new AddSaleWindow(selectedPartner, db);
+            bool? result = addSaleWindow.ShowDialog();
+
+            if (result == true)
+            {
+                int selectedPartnerId = selectedPartner.Id;
+
+                LoadPartners();
+
+                var updatedPartner = partnersCollection.FirstOrDefault(p => p.Id == selectedPartnerId);
+                if (updatedPartner != null)
+                {
+                    PartnersList.SelectedItem = updatedPartner;
+                    SalesGrid.ItemsSource = updatedPartner.PartnerSales.ToList();
+                }
+
+                MessageBox.Show("Продажа успешно добавлена.",
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
         }
     }
 }

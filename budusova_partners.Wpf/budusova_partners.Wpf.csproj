@@ -151,6 +151,9 @@
     <Compile Include="Views\AddEditPartnerWindow.xaml.cs">
       <DependentUpon>AddEditPartnerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AddSaleWindow.xaml.cs">
+      <DependentUpon>AddSaleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\AddEditPartnerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddSaleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,19 +6,25 @@
         <Menu DockPanel.Dock="Top" Background="AliceBlue">
             <MenuItem Header="Партнеры" FontWeight="Bold">
                 <MenuItem Header="Добавить партнера"
-                          Click="AddPartner_Click"/>
+                  Click="AddPartner_Click"/>
                 <MenuItem Header="Редактировать партнера"
-                          Click="EditPartner_Click"/>
+                  Click="EditPartner_Click"/>
                 <Separator/>
                 <MenuItem Header="Удалить партнера"
-                          Click="DeletePartner_Click"/>
+                  Click="DeletePartner_Click"/>
             </MenuItem>
+
+            <MenuItem Header="Продажи" FontWeight="Bold">
+                <MenuItem Header="Добавить продажу"
+                  Click="AddSale_Click"/>
+            </MenuItem>
+
             <MenuItem Header="Создать отчет"
-                      Click="CreateReport_Click"
-                      FontWeight="Bold"/>
+              Click="CreateReport_Click"
+              FontWeight="Bold"/>
             <MenuItem Header="Выход"
-                      Click="Exit_Click"
-                      FontWeight="Bold"/>
+              Click="Exit_Click"
+              FontWeight="Bold"/>
         </Menu>
 
         <Grid>

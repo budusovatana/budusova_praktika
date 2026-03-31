@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace budusova_partners.Lib.Services
 {
     public class DiscountService
     {
-        public static int CalculateDiscount(decimal totalSales)
+        public static int CalculateDiscount(int totalQuantity)
         {
-            if (totalSales < 0)
-                throw new ArgumentException("Сумма продаж не может быть отрицательной");
+            if (totalQuantity < 0)
+                throw new ArgumentException("Количество проданной продукции не может быть отрицательным");
 
-            if (totalSales < 10000m) return 0;
-            if (totalSales < 50000m) return 5;
-            if (totalSales < 300000m) return 10;
+            if (totalQuantity < 10000) return 0;
+            if (totalQuantity < 50000) return 5;
+            if (totalQuantity < 300000) return 10;
             return 15;
         }
 
@@ -24,5 +20,4 @@ namespace budusova_partners.Lib.Services
             return discountPercent > 0 ? $"{discountPercent}%" : "нет";
         }
     }
-    }
-
+}
