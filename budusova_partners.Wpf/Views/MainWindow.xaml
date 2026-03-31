@@ -16,7 +16,12 @@
 
             <MenuItem Header="Продажи" FontWeight="Bold">
                 <MenuItem Header="Добавить продажу"
-                  Click="AddSale_Click"/>
+              Click="AddSale_Click"/>
+                <MenuItem Header="Редактировать продажу"
+              Click="EditSale_Click"/>
+                <Separator/>
+                <MenuItem Header="Удалить продажу"
+              Click="DeleteSale_Click"/>
             </MenuItem>
 
             <MenuItem Header="Создать отчет"

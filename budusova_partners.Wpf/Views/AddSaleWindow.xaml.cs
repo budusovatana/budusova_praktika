@@ -11,15 +11,33 @@ namespace budusova_partners.Wpf.Views
     {
         private readonly AppDbContext db;
         private readonly Partner partner;
+        private readonly PartnerSale editingSale;
 
+        // Режим добавления
         public AddSaleWindow(Partner selectedPartner, AppDbContext context)
         {
             InitializeComponent();
 
             partner = selectedPartner;
             db = context;
+            editingSale = null;
 
+            Title = "Добавление продажи";
             LoadData();
+        }
+
+        // Режим редактирования
+        public AddSaleWindow(Partner selectedPartner, PartnerSale selectedSale, AppDbContext context)
+        {
+            InitializeComponent();
+
+            partner = selectedPartner;
+            db = context;
+            editingSale = selectedSale;
+
+            Title = "Редактирование продажи";
+            LoadData();
+            FillSaleData();
         }
 
         private void LoadData()
@@ -34,11 +52,35 @@ namespace budusova_partners.Wpf.Views
 
                 ProductsComboBox.ItemsSource = products;
 
-                SaleDatePicker.SelectedDate = DateTime.Today;
+                if (editingSale == null)
+                {
+                    SaleDatePicker.SelectedDate = DateTime.Today;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка загрузки данных: " + ex.Message,
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void FillSaleData()
+        {
+            try
+            {
+                if (editingSale == null)
+                    return;
+
+                ProductsComboBox.SelectedValue = editingSale.ProductId;
+                QuantityTextBox.Text = editingSale.Quantity.ToString();
+                UnitPriceTextBox.Text = editingSale.UnitPrice.ToString();
+                SaleDatePicker.SelectedDate = editingSale.SaleDate;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка загрузки продажи: " + ex.Message,
                     "Ошибка",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
@@ -87,16 +129,27 @@ namespace budusova_partners.Wpf.Views
 
                 var selectedProduct = (Product)ProductsComboBox.SelectedItem;
 
-                var sale = new PartnerSale
+                if (editingSale == null)
                 {
-                    PartnerId = partner.Id,
-                    ProductId = selectedProduct.Id,
-                    Quantity = quantity,
-                    UnitPrice = unitPrice,
-                    SaleDate = SaleDatePicker.SelectedDate.Value
-                };
+                    var sale = new PartnerSale
+                    {
+                        PartnerId = partner.Id,
+                        ProductId = selectedProduct.Id,
+                        Quantity = quantity,
+                        UnitPrice = unitPrice,
+                        SaleDate = SaleDatePicker.SelectedDate.Value
+                    };
 
-                db.PartnerSales.Add(sale);
+                    db.PartnerSales.Add(sale);
+                }
+                else
+                {
+                    editingSale.ProductId = selectedProduct.Id;
+                    editingSale.Quantity = quantity;
+                    editingSale.UnitPrice = unitPrice;
+                    editingSale.SaleDate = SaleDatePicker.SelectedDate.Value;
+                }
+
                 db.SaveChanges();
 
                 DialogResult = true;
@@ -111,7 +164,7 @@ namespace budusova_partners.Wpf.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка при добавлении продажи: " + ex.Message,
+                MessageBox.Show("Ошибка при сохранении продажи: " + ex.Message,
                     "Ошибка",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);

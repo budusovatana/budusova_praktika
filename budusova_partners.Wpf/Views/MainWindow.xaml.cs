@@ -231,5 +231,112 @@ namespace budusova_partners.Wpf.Views
                     MessageBoxImage.Information);
             }
         }
+        private void EditSale_Click(object sender, RoutedEventArgs e)
+        {
+            if (PartnersList.SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите партнера.",
+                    "Партнер не выбран",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            if (SalesGrid.SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите продажу для редактирования.",
+                    "Продажа не выбрана",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedPartner = (Partner)PartnersList.SelectedItem;
+            var selectedSale = (PartnerSale)SalesGrid.SelectedItem;
+
+            var editSaleWindow = new AddSaleWindow(selectedPartner, selectedSale, db);
+            bool? result = editSaleWindow.ShowDialog();
+
+            if (result == true)
+            {
+                int selectedPartnerId = selectedPartner.Id;
+
+                LoadPartners();
+
+                var updatedPartner = partnersCollection.FirstOrDefault(p => p.Id == selectedPartnerId);
+                if (updatedPartner != null)
+                {
+                    PartnersList.SelectedItem = updatedPartner;
+                    SalesGrid.ItemsSource = updatedPartner.PartnerSales.ToList();
+                }
+
+                MessageBox.Show("Продажа успешно изменена.",
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+        }
+
+        private void DeleteSale_Click(object sender, RoutedEventArgs e)
+        {
+            if (PartnersList.SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите партнера.",
+                    "Партнер не выбран",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            if (SalesGrid.SelectedItem == null)
+            {
+                MessageBox.Show("Сначала выберите продажу для удаления.",
+                    "Продажа не выбрана",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedPartner = (Partner)PartnersList.SelectedItem;
+            var selectedSale = (PartnerSale)SalesGrid.SelectedItem;
+
+            var result = MessageBox.Show(
+                "Вы действительно хотите удалить выбранную продажу?",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                db.PartnerSales.Remove(selectedSale);
+                db.SaveChanges();
+
+                int selectedPartnerId = selectedPartner.Id;
+
+                LoadPartners();
+
+                var updatedPartner = partnersCollection.FirstOrDefault(p => p.Id == selectedPartnerId);
+                if (updatedPartner != null)
+                {
+                    PartnersList.SelectedItem = updatedPartner;
+                    SalesGrid.ItemsSource = updatedPartner.PartnerSales.ToList();
+                }
+
+                MessageBox.Show("Продажа успешно удалена.",
+                    "Удаление выполнено",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка удаления продажи: " + ex.Message,
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
     }
 }
