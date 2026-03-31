@@ -159,5 +159,28 @@ namespace budusova_partners.Tests
             var updated = _context.Partners.First(p => p.Id == 2);
             Assert.AreEqual(9, updated.Rating);
         }
+        [TestMethod]
+        public void AddPartnerSale_ShouldBeSavedInDatabase()
+        {
+            var sale = new PartnerSale
+            {
+                PartnerId = 1,
+                ProductId = 1,
+                Quantity = 12000,
+                UnitPrice = 1200,
+                SaleDate = DateTime.Today
+            };
+
+            _context.PartnerSales.Add(sale);
+            _context.SaveChanges();
+
+            var addedSale = _context.PartnerSales.FirstOrDefault(s => s.PartnerId == 1 && s.ProductId == 1 && s.Quantity == 12000);
+
+            Assert.IsNotNull(addedSale);
+            Assert.AreEqual(12000, addedSale.Quantity);
+            Assert.AreEqual(1200m, addedSale.UnitPrice);
+            Assert.AreEqual(DateTime.Today, addedSale.SaleDate);
+        }
+
     }
 }
